@@ -6,7 +6,7 @@ import time
 USERNAME = os.getenv("BSKY_USERNAME")
 APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 
-# Debugging: Print username to check if it's set
+# Debugging: Check if secrets are properly received
 print(f"🔍 Debug: BSKY_USERNAME = {USERNAME}")
 print(f"🔍 Debug: BSKY_APP_PASSWORD exists: {'Yes' if APP_PASSWORD else 'No'}")
 
@@ -39,4 +39,13 @@ def search_and_retweet():
             # Check if the post has any of the target hashtags or is from Work With Indies
             if any(hashtag.lower() in post_text.lower() for hashtag in HASHTAGS) or post_author == TARGET_USER:
                 print(f"🔁 Retweeting: {post_text}")
-                client.app.bsky.feed.repost.create(client.me.did, p
+                client.app.bsky.feed.repost.create(client.me.did, post_uri)
+            else:
+                print("❌ No matching posts found.")
+    except Exception as e:
+        print(f"❌ Error while searching for posts: {e}")
+
+# Run every 10 minutes
+while True:
+    search_and_retweet()
+    time.sleep(600)  # 10 minutes
