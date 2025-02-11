@@ -20,9 +20,10 @@ TARGET_USER = "did:plc:q2bt6nvwkwt5thhr36zrdm7s"  # Work With Indies DID
 
 # Login to Bluesky
 try:
+    print("🔄 Attempting to log in to Bluesky...")
     client = Client()
     client.login(USERNAME, APP_PASSWORD)
-    print("✅ Logged into Bluesky successfully!")
+    print("✅ Successfully logged into Bluesky!")
 except Exception as e:
     print(f"❌ Login failed: {e}")
     exit(1)  # Exit with an error code
@@ -36,6 +37,9 @@ def search_and_retweet():
             post_uri = post.post.uri
             post_author = post.post.author.did  # Unique ID of the post author
 
+            # Debugging: Print out the posts found
+            print(f"📌 Found post from {post_author}: {post_text[:50]}...")
+
             # Check if the post has any of the target hashtags or is from Work With Indies
             if any(hashtag.lower() in post_text.lower() for hashtag in HASHTAGS) or post_author == TARGET_USER:
                 print(f"🔁 Retweeting: {post_text}")
@@ -45,7 +49,5 @@ def search_and_retweet():
     except Exception as e:
         print(f"❌ Error while searching for posts: {e}")
 
-# Run every 10 minutes
-while True:
-    search_and_retweet()
-    time.sleep(600)  # 10 minutes
+# Run once (instead of infinite loop) for debugging
+search_and_retweet()
